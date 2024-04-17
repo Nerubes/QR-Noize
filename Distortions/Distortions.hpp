@@ -14,7 +14,12 @@ using namespace cv;
 const int MAX_INTENSIVITY = 255;
 const int MIN_INTENSIVITY = 0;
 
-class Printer {
+class Modifier {
+public:
+    virtual void ModifyImage(Mat& image) = 0;
+};
+
+class Printer : public Modifier {
 public:
     Printer() : radius_x(0), radius_y(0) {}
 
@@ -180,13 +185,27 @@ private:
     bool horizontal;
 };
 
+class BlurPrinter : public Modifier {
+public:
+    BlurPrinter() = delete;
+
+    BlurPrinter(float intensivity) : intensivity(intensivity) {}
+
+    void ModifyImage(Mat& image) {
+        blur(image, image, Size(image.rows * intensivity, image.cols * intensivity));
+    }
+
+private:
+    float intensivity;
+};
+
 class PrinterStack {
 public:
     PrinterStack() {}
 
     PrinterStack(const PrinterStack&) = delete;
 
-    void AddLayer(std::unique_ptr<Printer> printer) {
+    void AddLayer(std::unique_ptr<Modifier> printer) {
         // Should move layers in here, to avoid copy and referance invalidation
         layers.push_back(std::move(printer));
     }
@@ -202,5 +221,5 @@ public:
     }
 
 private:
-    std::vector<std::unique_ptr<Printer>> layers;
+    std::vector<std::unique_ptr<Modifier>> layers;
 };

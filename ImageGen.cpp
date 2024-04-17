@@ -31,6 +31,7 @@ void ProcessFile(const std::string& image_path, const std::string& dir_path, con
         return;
     }
     Mat image = imread(image_path, IMREAD_GRAYSCALE);
+    std::cout << filename + "_" + stack_name << "  " << image.rows << 'x' << image.cols << std::endl;
     stack.ProcessImage(image);
     imwrite(dir_path + "/" + filename + "_" + stack_name + extension, image);
 }
@@ -64,11 +65,16 @@ int main(int argc, char *argv[]) {
                 stack_name = parsed[0];
                 continue;
             }
-            int r_x = std::stoi(parsed[1]);
-            int r_y = std::stoi(parsed[2]);
-            int density = std::stoi(parsed[3]);
-            bool black = parsed[4] == "0" ? false : true;
-            float intensivity = std::stof(parsed[5]);
+            int r_x, r_y, density;
+            bool black;
+            float intensivity;
+            if (parsed.size() > 5) {
+                r_x = std::stoi(parsed[1]);
+                r_y = std::stoi(parsed[2]);
+                density = std::stoi(parsed[3]);
+                black = parsed[4] == "0" ? false : true;
+                intensivity = std::stof(parsed[5]);
+            }
             if (parsed[0] == "Line") {
                 if (parsed.size() < 9) {
                     std::cout << "Warning : " << line << "  //Doesn't satisfy format\n";
@@ -116,7 +122,17 @@ int main(int argc, char *argv[]) {
                 }
                 auto p = std::make_unique<SinPrinter>(r_x, r_y, density, black, intensivity, start, shift, amplitude, period, horizontal, memory);
                 stack.AddLayer(std::move(p));
-            }         
+            }
+            else if (parsed[0] == "Blur") {
+                if (parsed.size() < 2) {
+                    std::cout << "Warning : " << line << "  //Doesn't satisfy format\n";
+                    continue;
+                }
+                intensivity = std::stof(parsed[1]);
+                auto p = std::make_unique<BlurPrinter>(intensivity);
+                stack.AddLayer(std::move(p));
+
+            }        
         } else {
             if (fs::is_directory(image_path)) {
                 for (const auto& entry : fs::directory_iterator(image_path)) {

@@ -2,6 +2,15 @@ import treepoem
 import sys
 import os
 
+def parse_options(opt):
+    if opt[0].startswith("None"):
+        return None
+    options = dict()
+    for i in opt:
+        key, value = i.split("=")
+        options[key.strip()] = value.strip() 
+    return options
+
 config_path = sys.argv[1]
 dir_path = sys.argv[2]
 try:
@@ -32,5 +41,5 @@ for line in config_lines:
         parsed = line.split(":")
         barcode_type = parsed[0]
         amount = int(parsed[1])
-        options = None #TODO:Make actual options
+        options = parse_options(parsed[2:])
         is_set = True
