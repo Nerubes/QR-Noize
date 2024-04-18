@@ -7,7 +7,7 @@
 
 1. Файл с описанием операций создания картинок в виде :
 
-- Тип штрих кода:количество картинок:параметры (в более поздних версиях) (на данный момент не писать) ([типы](https://pypi.org/project/treepoem/))
+- Тип штрих кода:количество картинок:параметры (в виде key1=value1:key2=value2 или None) ([типы](https://pypi.org/project/treepoem/))
 
 - Далее идет (количество картинок) строк, для создания штрих кодов
 
@@ -24,9 +24,10 @@
 - Можно писать коментарии начинающиеся с / (я делал с // потому что так лучше видно)
 
 - Описания применимых искажений в рамках одной операции выглядят следующим образом(назначения аргументов было описано [тут](Distortions/README.md) в разделе про интерфейсы) : 
-    + Line - r_x, r_y, density, black, intensivity, start, end, horizontal, use_memory
-    + Blob - r_x, r_y, density, black, intensivity, point_x, point_y, radius_a, radius_b, use_memory
-    + Sin - r_x, r_y, density, black, intensivity, start, shift, amplitude, period, horizontal ,use_memory
+    + Line - r_x, r_y, x_lim, y_lim, density, black, intensivity, start, end, horizontal, use_memory
+    + Blob - r_x, r_y, x_lim, y_lim, density, black, intensivity, point_x, point_y, radius_a, radius_b, use_memory
+    + Sin - r_x, r_y, x_lim, y_lim, density, black, intensivity, start, shift, amplitude, period, horizontal ,use_memory
+    + Blur - intesivity
     + [Пример](noize.config)
 
 - Перед каждым отдельным описанием операции должно быть его название, а после пустая строка
@@ -37,10 +38,15 @@
 
 test и test_mod - Примеры запуска ./build.sh && ./run.sh generate.config test test_mod noize.config
 
+### Валидация:
+
+В месте где сгенерировались картинки будет запущен валидатор который попытается их раскодировать и выдаст json с результатами.
+
+Возможно надо понять как аффектит валидацию блюр и нужен ли такой эффект (да и вообще что то странное творится с непропесатывающимися символами)
 
 ### Простая генерация:
 
 blur можно менять значение для изменения интенсивности блюра (что то валидное на данных размерах будет в [0.025 - 0.3])
 
-logo - ведет себя как штрих-коды с логотипами
+Можно потыкать в intensivity и density во всех схемах генерации
 

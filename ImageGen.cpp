@@ -31,7 +31,7 @@ void ProcessFile(const std::string& image_path, const std::string& dir_path, con
         return;
     }
     Mat image = imread(image_path, IMREAD_GRAYSCALE);
-    std::cout << filename + "_" + stack_name << "  " << image.rows << 'x' << image.cols << std::endl;
+    //std::cout << filename + "_" + stack_name << "  " << image.rows << 'x' << image.cols << std::endl;
     stack.ProcessImage(image);
     imwrite(dir_path + "/" + filename + "_" + stack_name + extension, image);
 }
@@ -65,62 +65,64 @@ int main(int argc, char *argv[]) {
                 stack_name = parsed[0];
                 continue;
             }
-            int r_x, r_y, density;
+            int r_x, r_y, x_lim, y_lim, density;
             bool black;
             float intensivity;
-            if (parsed.size() > 5) {
+            if (parsed.size() > 7) {
                 r_x = std::stoi(parsed[1]);
                 r_y = std::stoi(parsed[2]);
-                density = std::stoi(parsed[3]);
-                black = parsed[4] == "0" ? false : true;
-                intensivity = std::stof(parsed[5]);
+                x_lim = std::stoi(parsed[3]);
+                x_lim = std::stoi(parsed[4]);
+                density = std::stoi(parsed[5]);
+                black = parsed[6] == "0" ? false : true;
+                intensivity = std::stof(parsed[7]);
             }
             if (parsed[0] == "Line") {
-                if (parsed.size() < 9) {
-                    std::cout << "Warning : " << line << "  //Doesn't satisfy format\n";
-                    continue;
-                }
-                int start = std::stoi(parsed[6]);
-                int end = std::stoi(parsed[7]);
-                int horizontal = parsed[8] ==  "0" ? false : true;
-                bool memory = false;
-                if (parsed.size() > 9) {
-                    memory = parsed[9] ==  "0" ? false : true;
-                }
-                auto p = std::make_unique<LinesPrinter>(r_x, r_y, density, black, intensivity, start, end, horizontal, memory);
-                stack.AddLayer(std::move(p));
-            }
-            else if (parsed[0] == "Blob") {
-                if (parsed.size() < 10) {
-                    std::cout << "Warning : " << line << "  //Doesn't satisfy format\n";
-                    continue;
-                }
-                int point_x = std::stoi(parsed[6]);
-                int point_y = std::stoi(parsed[7]);
-                int radius_a = std::stoi(parsed[8]);
-                int radius_b = std::stoi(parsed[9]);
-                bool memory = false;
-                if (parsed.size() > 10) {
-                    memory = parsed[10] ==  "0" ? false : true;
-                }
-                auto p = std::make_unique<BlobPrinter>(r_x, r_y, density, black, intensivity, point_x, point_y, radius_a, radius_b, memory);
-                stack.AddLayer(std::move(p));
-            }
-            else if (parsed[0] == "Sin") {
                 if (parsed.size() < 11) {
                     std::cout << "Warning : " << line << "  //Doesn't satisfy format\n";
                     continue;
                 }
-                int start = std::stoi(parsed[6]);
-                int shift = std::stoi(parsed[7]);
-                int amplitude = std::stoi(parsed[8]);
-                float period = std::stof(parsed[9]);
+                int start = std::stoi(parsed[8]);
+                int end = std::stoi(parsed[9]);
                 int horizontal = parsed[10] ==  "0" ? false : true;
                 bool memory = false;
                 if (parsed.size() > 11) {
                     memory = parsed[11] ==  "0" ? false : true;
                 }
-                auto p = std::make_unique<SinPrinter>(r_x, r_y, density, black, intensivity, start, shift, amplitude, period, horizontal, memory);
+                auto p = std::make_unique<LinesPrinter>(r_x, r_y, x_lim, y_lim, density, black, intensivity, start, end, horizontal, memory);
+                stack.AddLayer(std::move(p));
+            }
+            else if (parsed[0] == "Blob") {
+                if (parsed.size() < 12) {
+                    std::cout << "Warning : " << line << "  //Doesn't satisfy format\n";
+                    continue;
+                }
+                int point_x = std::stoi(parsed[8]);
+                int point_y = std::stoi(parsed[9]);
+                int radius_a = std::stoi(parsed[10]);
+                int radius_b = std::stoi(parsed[11]);
+                bool memory = false;
+                if (parsed.size() > 12) {
+                    memory = parsed[12] ==  "0" ? false : true;
+                }
+                auto p = std::make_unique<BlobPrinter>(r_x, r_y, x_lim, y_lim, density, black, intensivity, point_x, point_y, radius_a, radius_b, memory);
+                stack.AddLayer(std::move(p));
+            }
+            else if (parsed[0] == "Sin") {
+                if (parsed.size() < 13) {
+                    std::cout << "Warning : " << line << "  //Doesn't satisfy format\n";
+                    continue;
+                }
+                int start = std::stoi(parsed[8]);
+                int shift = std::stoi(parsed[9]);
+                int amplitude = std::stoi(parsed[10]);
+                float period = std::stof(parsed[11]);
+                int horizontal = parsed[12] ==  "0" ? false : true;
+                bool memory = false;
+                if (parsed.size() > 13) {
+                    memory = parsed[13] ==  "0" ? false : true;
+                }
+                auto p = std::make_unique<SinPrinter>(r_x, r_y, x_lim, y_lim, density, black, intensivity, start, shift, amplitude, period, horizontal, memory);
                 stack.AddLayer(std::move(p));
             }
             else if (parsed[0] == "Blur") {

@@ -23,11 +23,18 @@ class Printer : public Modifier {
 public:
     Printer() : radius_x(0), radius_y(0) {}
 
-    Printer(int radius_x, int radius_y, int density, bool black, float intensivity, bool use_memory) :
-            radius_x(radius_x), radius_y(radius_y), density(density),
-            black(black), intensivity(intensivity), use_memory(use_memory) {
+    Printer(int radius_x, int radius_y, int x_lim_, int y_lim_, int density, bool black, float intensivity, bool use_memory) :
+            radius_x(radius_x), radius_y(radius_y), x_lim(x_lim_), y_lim(y_lim_),
+            density(density), black(black), intensivity(intensivity), 
+            use_memory(use_memory) {
         new_intensivity = black ? -255 : 255;
         new_intensivity = static_cast<int>(static_cast<float>(new_intensivity) * intensivity);
+        if (x_lim <= 0) {
+            x_lim = std::numeric_limits<int>::max();
+        }
+        if (y_lim <= 0) {
+            y_lim = std::numeric_limits<int>::max();
+        }
         if (radius_x == 0 && radius_y == 0) {
             use_memory = false;
         }
@@ -40,7 +47,9 @@ public:
         for (int x = 0; x < rows; ++x) {
             uchar* p = image.ptr<uchar>(x);
             for (int y = 0; y < cols; ++y) {
-                p[y] = normalize(p[y], getDistortion(x, y));
+                if (x <= x_lim && y <= y_lim) {
+                    p[y] = normalize(p[y], getDistortion(x, y));
+                }
             }
         }
     }
@@ -79,6 +88,9 @@ protected:
     int radius_x;
     int radius_y;
 
+    int x_lim;
+    int y_lim;
+
     int density;
     bool black;
     float intensivity;
@@ -93,11 +105,11 @@ class LinesPrinter : public Printer {
 public:
     LinesPrinter() = delete;
 
-    LinesPrinter(int radius_x, int radius_y, 
+    LinesPrinter(int radius_x, int radius_y, int x_lim, int y_lim,
                       int density, bool black, float intensivity, 
                       int start_, int end_, bool horizontal_,
                       bool use_memory = false) : 
-                        Printer(radius_x, radius_y, density, black, intensivity, use_memory) {
+                        Printer(radius_x, radius_y, x_lim, y_lim, density, black, intensivity, use_memory) {
         horizontal = horizontal_;
         start = start_;
         end = end_;
@@ -121,11 +133,11 @@ class BlobPrinter : public Printer {
 public:
     BlobPrinter() = delete;
 
-    BlobPrinter(int radius_x, int radius_y, 
+    BlobPrinter(int radius_x, int radius_y, int x_lim, int y_lim,
                       int density, bool black, float intensivity, 
                       int point_x_, int point_y_, int radius_a_, int radius_b_,
                       bool use_memory = false) : 
-                        Printer(radius_x, radius_y, density, black, intensivity, use_memory) {
+                        Printer(radius_x, radius_y, x_lim, y_lim, density, black, intensivity, use_memory) {
         point_x = point_x_;
         point_y = point_y_;
         radius_a = radius_a_;
@@ -154,11 +166,11 @@ class SinPrinter : public Printer {
 public:
     SinPrinter() = delete;
 
-    SinPrinter(int radius_x, int radius_y, 
+    SinPrinter(int radius_x, int radius_y, int x_lim, int y_lim,
                       int density, bool black, float intensivity,
                       int start_, int shift_, int amplitude_, float period_, bool horizontal_,
                       bool use_memory = false) : 
-                        Printer(radius_x, radius_y, density, black, intensivity, use_memory) {
+                        Printer(radius_x, radius_y, x_lim, y_lim, density, black, intensivity, use_memory) {
         start = start_;
         shift = shift_;
         amplitude = amplitude_;

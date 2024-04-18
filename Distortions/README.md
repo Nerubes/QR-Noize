@@ -2,19 +2,21 @@
 0) Общие для всех интерфейсов параметры и функции :
 - int radius_x : длина периода по оси X в пикселях
 - int radius_y : длина периода по оси Y в пикселях
+- int x_lim : предел для изменений по оси X в пикселях
+- int y_lim : предел для изменений по оси Y в пикселях
 - int density : плотность изменений интенсивности (принимает значения из [0-100]) вероятность для каждого отдельного пикселя быть измененным из области, где происходит изменение (в процентах)
 - bool black : флаг отображающий должны ли быть изменения интенсивности понижением или повышением (черный или белый цвет)
 - float intensivity : интенсивность изменений (принадлежит [0-1]) отображает силу изменения, где 0 отсутствие изменений, а 1 изменение на белый или черный цвет (в зависимости от black)
 
 - use_mamory : флаг отображаюший нужно ли использовать память для того чтобы изменений были по честному периодическими (default : false, так как замедляет исполнение)
 
-1) Line(radius_x, radius_y, density, black, intensivity, start, end, horizontal) - класс для генерации прямых линий с дефектом :
+1) Line(radius_x, radius_y, x_lim, y_lim, density, black, intensivity, start, end, horizontal) - класс для генерации прямых линий с дефектом :
 
 - int start : начало полосы изменений (ось зависит от horizontal)
 - int end : конец полосы изменений (ось зависит от horizontal)
 - bool horizontal : флаг обозначающий горизонтальность или вертикальность линии изменения
 
-2) Blob(radius_x, radius_y, density, black, intensivity, point_x, point_y, radius_a, radius_b, use_memory) - класс для генерации клякс (представлены элипсами) :
+2) Blob(radius_x, radius_y, x_lim, y_lim, density, black, intensivity, point_x, point_y, radius_a, radius_b, use_memory) - класс для генерации клякс (представлены элипсами) :
 
 - int point_x : местоположение кляксы по X
 - int point_y : местоположение кляксы по Y
@@ -25,7 +27,7 @@
 
 $$ ({(x - point_x) \over radius_a})^2 + ({(y - point_y) \over radius_b})^2 < 1 $$
 
-3) Sin(radius_x, radius_y, density, black, intensivity, start, shift, amplitude, period, horizontal, use_memory) - класс для генерации синусоподобных зашумлений :
+3) Sin(radius_x, radius_y, x_lim, y_lim, density, black, intensivity, start, shift, amplitude, period, horizontal, use_memory) - класс для генерации синусоподобных зашумлений :
 
 - int start : смещение по значению (определяется из hotizontal)
 - int shift : смещение по фазе (определяется из horizontal)
@@ -38,3 +40,5 @@ $$ ({(x - point_x) \over radius_a})^2 + ({(y - point_y) \over radius_b})^2 < 1 $
 $$ |{sin(x - shift) \over period}| * amplitude > y - start $$ 
 
  (для horizontal=false)
+
+4) Blur(intensivity) - блюр на всю картинку
