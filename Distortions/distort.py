@@ -61,7 +61,7 @@ except FileExistsError:
 
 tmp_distorts = []
 
-with open("config_psth", 'r') as f:
+with open(config_path, 'r') as f:
     tmp_distorts = f.read().split("\n\n")[:-1]
 
 
