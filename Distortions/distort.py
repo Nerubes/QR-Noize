@@ -11,7 +11,6 @@ def real_destorts(d):
         return '', []
     pipeline = []
     for i in by_line_dist[1:]:
-        print(i)
         params = i.split(' ')
         if params[0] == 'LightingGradient' and len(params) == 8:
             x, y = int(params[1]), int(params[2])
@@ -72,15 +71,11 @@ for i in tmp_distorts:
                 print("Warning: ", img, " is not image!")
             continue
 
-        print(name, d)
         for func in d:
             img_mat = func(img_mat)
 
         extension = img.split('.')[-1]
         img_name = '.'.join(img.split('.')[0:-1])
         new_name = out_dir_path + '/' + img_name + '_' + name + '_.' + extension
-
-
-        print(img)
 
         cv2.imwrite(new_name, img_mat)
