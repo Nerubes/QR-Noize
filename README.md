@@ -134,7 +134,7 @@ blur можно менять значение для изменения инте
 
 ![](qr-codes-damaged/blur/images--72-_jpg.rf.2adb3812273ce3a4b8527bcb78619ee1.jpg)
 
-![](qr-codes-damaged/erasure/photo_2024-04-11_09-17-55 (5).jpg)
+![](qr-codes-damaged/erasure/photo_2024-04-11_09-17-55(5).jpg)
 
 ![](qr-codes-damaged/logo/886743d3807ae20076d4a8007dd81cde.png)
 

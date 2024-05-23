@@ -46,7 +46,7 @@ def real_destorts(d):
                                                           min_brightness=min_br, 
                                                           p=p))
         else:
-            raise f"Unknown line: \"{d}\""
+            raise Exception(f"Unknown line: \"{d}\"")
     return name, pipeline
 
 in_dir_path = sys.argv[1]
