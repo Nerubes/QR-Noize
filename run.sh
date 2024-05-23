@@ -5,10 +5,12 @@
 # 2) Путь к месту для генерации
 # 3) Путь к месту для зашумленных картинок
 # 4) Путь к кофигу зашумления
+# 5) Путь к конфигу для питоновского зашумления
 # По пути из 3 аргумента будет создано множество картиинок + файл с запуском валидации на них (validation.json)
 
 python3 Generate/generate.py $1 $2
 
 ./build/imgen $2 $3 $4
+python3 Distortions/distort.py $2 $3 $5
 
-python3 Validate/validate.py $3
+python3 Validate/validate.py $3 $2

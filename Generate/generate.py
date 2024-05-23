@@ -1,6 +1,11 @@
 import treepoem
 import sys
 import os
+import json
+
+JSON_ANNOTAION_NAME = "annotation.json"
+
+annotsion_list = {}
 
 def parse_options(opt):
     if opt[0].startswith("None"):
@@ -32,7 +37,8 @@ index = 0
 for line in config_lines:
     if is_set:
         barcode = treepoem.generate_barcode(barcode_type=barcode_type, data=line.strip(), options=options)
-        barcode.save(dir_path + "/" + str(index) + ".jpg")
+        barcode.save(f"{dir_path}/{str(index)}.png")
+        annotsion_list[index] = {"value":line.strip(), "type":barcode_type, "options":options}
         index += 1
         amount -= 1
         if amount == 0:
@@ -43,3 +49,6 @@ for line in config_lines:
         amount = int(parsed[1])
         options = parse_options(parsed[2:])
         is_set = True
+
+with open(f"{dir_path}/{JSON_ANNOTAION_NAME}", "w") as f:
+    json.dump(annotsion_list, f)

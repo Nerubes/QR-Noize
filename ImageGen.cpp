@@ -8,26 +8,30 @@ namespace fs = std::filesystem;
 
 #include <Distortions.hpp>
 
+std::vector<std::string> PYTHON_DISTORTIONS()
+
 std::vector<std::string> split(std::string s, std::string delimiter) {
     size_t pos_start = 0, pos_end, delim_len = delimiter.length();
     std::string token;
     std::vector<std::string> res;
 
     while ((pos_end = s.find(delimiter, pos_start)) != std::string::npos) {
-        token = s.substr (pos_start, pos_end - pos_start);
+        token = s.substr(pos_start, pos_end - pos_start);
         pos_start = pos_end + delim_len;
-        res.push_back (token);
+        res.push_back(token);
     }
 
-    res.push_back (s.substr (pos_start));
+    res.push_back(s.substr(pos_start));
     return res;
 }
 
 void ProcessFile(const std::string& image_path, const std::string& dir_path, const PrinterStack& stack, const std::string& stack_name) {
     std::string filename = fs::path(image_path).stem();
     std::string extension = fs::path(image_path).extension();
-    if (extension != ".jpg" && extension != ".jpeg") {
-        std::cout << "WARNING: NOT VALID FORMAT : " << extension << '\n';
+    if (extension != ".jpg" && extension != ".jpeg" && extension != ".png") {
+        if (extension != ".json") {
+            std::cout << "WARNING: NOT VALID FORMAT : " << extension << '\n';
+        }
         return;
     }
     Mat image = imread(image_path, IMREAD_GRAYSCALE);
@@ -134,7 +138,9 @@ int main(int argc, char *argv[]) {
                 auto p = std::make_unique<BlurPrinter>(intensivity);
                 stack.AddLayer(std::move(p));
 
-            }        
+            } else if (PYTHON_DISTORTIONS.find(parsed[0]) != -1) {
+                continue;
+            } 
         } else {
             if (fs::is_directory(image_path)) {
                 for (const auto& entry : fs::directory_iterator(image_path)) {
