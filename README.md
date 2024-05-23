@@ -34,9 +34,14 @@
 
 - В конце файла должно быть 2 пустые строки
 
+5. Файл с описанием зашумлений из augraphy:
+
+- Все тоже самое что и для обычного зашумления, но другие операции и не нужно 2 пустые строчки в конце [Пример](augraphy.config) 
 
 
-test и test_mod - Примеры запуска ./build.sh && ./run.sh generate.config test test_mod noize.config
+
+
+test и test_mod - Примеры запуска ./build.sh && ./run.sh generate.config test test_mod noize.config augraphy.config
 
 ### Валидация:
 
