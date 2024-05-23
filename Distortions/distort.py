@@ -79,6 +79,6 @@ for i in tmp_distorts:
 
         extension = img.split('.')[-1]
         img_name = '.'.join(img.split('.')[0:-1])
-        new_name = img_name + '_' + name + '_' + extension
+        new_name = img_name + '_' + name + '_.' + extension
 
         cv2.imwrite(new_name, img_mat)
