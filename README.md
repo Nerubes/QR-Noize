@@ -129,13 +129,3 @@ test и test_mod - Примеры запуска ./build.sh && ./run.sh generate
 blur можно менять значение для изменения интенсивности блюра (что то валидное на данных размерах будет в [0.025 - 0.3])
 
 Можно потыкать в intensivity и density во всех схемах генерации
-
-### Примеры реальных шумов:
-
-![](qr-codes-damaged/blur/images--72-_jpg.rf.2adb3812273ce3a4b8527bcb78619ee1.jpg)
-
-![](qr-codes-damaged/erasure/photo_2024-04-11_09-17-55(5).jpg)
-
-![](qr-codes-damaged/logo/886743d3807ae20076d4a8007dd81cde.png)
-
-![](qr-codes-damaged/erasure/photo_2024-04-11_09-17-56(2).jpg)
