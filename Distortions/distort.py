@@ -66,6 +66,8 @@ with open(config_path, 'r') as f:
 
 
 for i in tmp_distorts:
+    if i[0] == '/':
+        continue
     name, d = real_destorts(i)
     for img in os.listdir(in_dir_path):
         img_mat = cv2.imread(os.path.join(in_dir_path, img))
