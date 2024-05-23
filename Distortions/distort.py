@@ -10,7 +10,8 @@ def real_destorts(d):
     if name[0] == '/':
         return '', []
     pipeline = []
-    for i in by_line_dist:
+    for i in by_line_dist[1:]:
+        print(i)
         params = i.split(' ')
         if params[0] == 'LightingGradient' and len(params) == 8:
             x, y = int(params[1]), int(params[2])
@@ -29,21 +30,16 @@ def real_destorts(d):
                                                           max_brightness=max_br, 
                                                           min_brightness=min_br, 
                                                           mode=mode, p=p))
-        elif params[0] == 'ReflectedLight' and len(params) == 7:
+        elif params[0] == 'ReflectedLight' and len(params) == 5:
             x, y = int(params[1]), int(params[2])
             minor_major_ratio = float(params[3])
-            max_br, min_br = int(params[4]), int(params[5])
-            p = float(params[6])
+            p = float(params[4])
             if x == -1 or y == -1:
-                pipeline.append(augraphy.LightingGradient(direction=direction, 
-                                                          max_brightness=max_br, 
-                                                          min_brightness=min_br, 
+                pipeline.append(augraphy.ReflectedLight(reflected_light_minor_major_ratio_range=(minor_major_ratio, minor_major_ratio),
                                                           p=p))
             else:
-                pipeline.append(augraphy.LightingGradient(light_position=(x, y),
-                                                          direction=direction, 
-                                                          max_brightness=max_br, 
-                                                          min_brightness=min_br, 
+                pipeline.append(augraphy.ReflectedLight(reflect_light_location=(x, y),
+                                                          reflected_light_minor_major_ratio_range=(minor_major_ratio, minor_major_ratio),
                                                           p=p))
         else:
             raise Exception(f"Unknown line: \"{d}\"")
@@ -76,11 +72,15 @@ for i in tmp_distorts:
                 print("Warning: ", img, " is not image!")
             continue
 
+        print(name, d)
         for func in d:
             img_mat = func(img_mat)
 
         extension = img.split('.')[-1]
         img_name = '.'.join(img.split('.')[0:-1])
-        new_name = img_name + '_' + name + '_.' + extension
+        new_name = out_dir_path + '/' + img_name + '_' + name + '_.' + extension
+
+
+        print(img)
 
         cv2.imwrite(new_name, img_mat)
